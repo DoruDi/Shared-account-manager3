@@ -3,32 +3,52 @@ const people = [
         name: "Maria",
         totalAmount: 10000,
         interestDeposit: 0,
-        safekeepingDeposit: 0
+        safekeepingDeposit: 0,
+        counter: 0
     },
     {
         name: "Doru",
         totalAmount: 10000,
         interestDeposit: 0,
-        safekeepingDeposit: 0
+        safekeepingDeposit: 0,
+        counter: 0
     },
     {
         name: "Cosmin",
         totalAmount: 10000,
         interestDeposit: 0,
-        safekeepingDeposit: 0
+        safekeepingDeposit: 0,
+        counter: 0
     },
     {
         name: "Cristina",
         totalAmount: 10000,
         interestDeposit: 0,
-        safekeepingDeposit: 0
+        safekeepingDeposit: 0,
+        counter: 0
     },
     {
         name: "Ionel",
         totalAmount: 10000,
         interestDeposit: 0,
-        safekeepingDeposit: 0
-    }];
+        safekeepingDeposit: 0,
+        counter: 0
+    },
+    {
+        name: "Catalin",
+        totalAmount: 10000,
+        interestDeposit: 0,
+        safekeepingDeposit: 0,
+        counter: 0
+    },
+    // {
+    //     name: "Andrei",
+    //     totalAmount: 10000,
+    //     interestDeposit: 0,
+    //     safekeepingDeposit: 0,
+    //     counter: 0
+    // },
+];
 localStorage.setItem("myList", JSON.stringify({ "totalDeposit": 0 }))
 localStorage.setItem("allPeopleHistory", JSON.stringify([]))
 
@@ -171,6 +191,7 @@ people.forEach((person, index) => {
       <button class="widrawFromInterest">widraw from interest</button>
       <button class="widrawFromSafe">widraw from safekeeping</button>
     </div> 
+    <span class="personCounter">${person.counter}</span>
     `
     sectionOne.append(personDiv);
 
@@ -181,23 +202,27 @@ const depositBtns = document.getElementsByClassName("deposit");
 for (let i = 0; i < depositBtns.length; i++) {
     depositBtns[i].addEventListener('click', () => handleInterestDeposit(i));
     depositBtns[i].addEventListener('click', () => addToHistory(i));
+    depositBtns[i].addEventListener('click', () => updataTotalAmount(i));
+
 }
 const safekeepingBtns = document.getElementsByClassName("safekeeping");
 for (let i = 0; i < safekeepingBtns.length; i++) {
     safekeepingBtns[i].addEventListener('click', () => handleSafekeepingDeposit(i));
     safekeepingBtns[i].addEventListener('click', () => addToHistory(i));
+    safekeepingBtns[i].addEventListener('click', () => updataTotalAmount(i));
+
 }
 const widrawInterestBtns = document.getElementsByClassName("widrawFromInterest");
 for (let i = 0; i < widrawInterestBtns.length; i++) {
     widrawInterestBtns[i].addEventListener('click', () => handleInterestWidraw(i));
     widrawInterestBtns[i].addEventListener('click', () => addToHistory(i));
-
+    // widrawInterestBtns[i].addEventListener('click', () => updataTotalAmount(i));
 }
 const widrawSafekeepingBtns = document.getElementsByClassName("widrawFromSafe");
 for (let i = 0; i < widrawSafekeepingBtns.length; i++) {
     widrawSafekeepingBtns[i].addEventListener('click', () => handleSafekeepingWidraw(i));
     widrawSafekeepingBtns[i].addEventListener('click', () => addToHistory(i));
-
+    // widrawSafekeepingBtns[i].addEventListener('click', () => updataTotalAmount(i));
 }
 // const historyBtns = document.getElementsByClassName("history");
 // for (let i = 0; i < historyBtns.length; i++) {
@@ -229,7 +254,7 @@ function handleInterestDeposit(i) {
     if (totalDeposit > 100000) totalDeposit = 100000;
     let procent = (totalDeposit * 100) / 100000;
     document.querySelector('.totalDeposit').style.height = `${procent}%`;
-    currentSharedAmount.innerHTML = `${totalDeposit} lei`;
+    currentSharedAmount.innerHTML = `${totalDeposit.toFixed(2)} lei`;
     currentSharedAmount.style.bottom = procent > 95 ? "92%"
         : procent < 4 ? "4%"
             : `${procent}%`;
@@ -265,7 +290,7 @@ function handleSafekeepingDeposit(i) {
     if (totalDeposit > 100000) totalDeposit = 100000;
     let procent = (totalDeposit * 100) / 100000;
     document.querySelector('.totalDeposit').style.height = `${procent}%`;
-    currentSharedAmount.innerHTML = `${totalDeposit} lei`;
+    currentSharedAmount.innerHTML = `${totalDeposit.toFixed(2)} lei`;
     currentSharedAmount.style.bottom = procent > 95 ? "92%"
         : procent < 4 ? "4%"
             : `${procent}%`;
@@ -298,7 +323,7 @@ function handleInterestWidraw(i) {
     
     let procent = (totalDeposit * 100) / 100000;
     document.querySelector('.totalDeposit').style.height = `${procent}%`;
-    currentSharedAmount.innerHTML = `${totalDeposit} lei`;
+    currentSharedAmount.innerHTML = `${totalDeposit.toFixed(2)} lei`;
     currentSharedAmount.style.bottom = procent > 80 ? "80%"
         : procent < 8 ? "4%"
             : `${procent}%`;
@@ -328,7 +353,7 @@ function handleSafekeepingWidraw(i) {
 
     let procent = (totalDeposit * 100) / 100000;
     document.querySelector('.totalDeposit').style.height = `${procent}%`;
-    currentSharedAmount.innerHTML = `${totalDeposit} lei`;
+    currentSharedAmount.innerHTML = `${totalDeposit.toFixed(2)} lei`;
     currentSharedAmount.style.bottom = procent > 80 ? "80%"
         : procent < 8 ? "4%"
             : `${procent}%`;
@@ -346,7 +371,6 @@ function handleSafekeepingWidraw(i) {
 function addToHistory(i) {
     historyDiv.innerHTML = '';
     allPeopleHistory = JSON.parse(localStorage.getItem('allPeopleHistory'));
-    console.log(allPeopleHistory)
     allPeopleHistory.forEach(el => {
         const elArray = Object.entries(el)
         const eventDiv = document.createElement('div');
@@ -466,3 +490,37 @@ document.getElementById('selectType').addEventListener('change', function() {
         historyDiv.append(eventDiv)
     })
 })
+const counters = document.getElementsByClassName('personCounter');
+// for(let i = 0; i < people.length; i++) {
+//     setInterval(() => {       
+//         people[i].counter++;
+//         const personHistoryObj = {
+//             name: people[i].name,
+//             date: new Date().toString().substring(0, 25),
+//             money_lose: (people[i].totalAmount * 5/100)
+//         };
+//         if(people[i].counter == 10)  {
+//             people[i].totalAmount -= (people[i].totalAmount * 5/100);
+//             people[i].totalAmount.toFixed(2)
+//             people[i].counter = 0;
+//             totalDeposit += (people[i].totalAmount * 5/100);
+//             localStorage.setItem("myList", JSON.stringify({ "totalDeposit": totalDeposit }))
+//             currentSharedAmount.innerHTML = `${totalDeposit.toFixed(2)} lei`;
+//             document.getElementsByClassName('personSold')[i].innerHTML = `${people[i].totalAmount.toFixed(2)} Lei`;
+           
+//             console.log(people[i].totalAmount)
+//             historyObj.unshift(personHistoryObj);
+//             localStorage.setItem("allPeopleHistory", JSON.stringify(historyObj));
+//             allPeopleHistory = JSON.parse(localStorage.getItem('allPeopleHistory'));
+//             addToHistory()
+//         }
+            
+//         counters[i].innerHTML = people[i].counter;       
+//     }, 10000) 
+// }
+function updataTotalAmount(i) {
+    people[i].counter = 0;
+    document.getElementsByClassName('personCounter')[i].innerHTML = "0"
+}
+
+
