@@ -106,17 +106,20 @@ const safekeepingWidrawType = document.createElement('option');
 safekeepingWidrawType.setAttribute('value', "widraw_from_safekeeping");
 safekeepingWidrawType.innerText = "Safekeeping Widraw";
 
+const loseMoneyType = document.createElement('option');
+loseMoneyType.setAttribute('value', "money_lose");
+loseMoneyType.innerText = "Money_lose";
+
 const dateInput = document.createElement('input');
 dateInput.setAttribute('type', "date")
 
 selectType.append(allType, interestDepositType,safekeepingDepositType,
-     interestWidrawType, safekeepingWidrawType)
-filterHistory.append(selectType,dateInput)
+     interestWidrawType, safekeepingWidrawType, loseMoneyType);
+filterHistory.append(selectType,dateInput);
 
 
 
-historySection.append(historyTitle, filterHistory)
-// historySection.append(historyTitle);
+historySection.append(historyTitle, filterHistory);
 const historyDiv = document.createElement('div');
 historyDiv.classList.add('historyDiv');
 historySection.append(historyDiv);
@@ -231,6 +234,9 @@ for (let i = 0; i < widrawSafekeepingBtns.length; i++) {
 
 function handleInterestDeposit(i) {
     let depositAmount = document.getElementsByTagName('input')[i].value;
+    if(depositAmount == "") {
+        return;
+    }
     if(depositAmount > people[i].totalAmount) {
         alert(`Your total amount is ${people[i].totalAmount}`);
         document.getElementsByTagName('input')[i].value = "";
@@ -275,6 +281,9 @@ function handleInterestDeposit(i) {
 
 function handleSafekeepingDeposit(i) {
     let depositAmount = document.getElementsByTagName('input')[i].value;
+    if(depositAmount == "") {
+        return;
+    }
     if(depositAmount > people[i].totalAmount) {
         alert(`Your total amount is ${people[i].totalAmount}`);
         document.getElementsByTagName('input')[i].value = "";
@@ -309,6 +318,9 @@ function handleSafekeepingDeposit(i) {
 
 function handleInterestWidraw(i) {
     let widrawAmount = document.getElementsByTagName('input')[i].value;
+    if(widrawAmount == "") {
+        return;
+    }
     if(widrawAmount > people[i].interestDeposit) {
         alert("maxim widraw is" +" "+ people[i].interestDeposit.toFixed(2) +" "+ "lei");
         document.getElementsByTagName('input')[i].value = "";
@@ -339,6 +351,9 @@ function handleInterestWidraw(i) {
 }
 function handleSafekeepingWidraw(i) {
     let widrawAmount = document.getElementsByTagName('input')[i].value;
+    if(widrawAmount == "") {
+        return;
+    }
     if(widrawAmount > people[i].safekeepingDeposit) {
         alert("maxim widraw is" +" "+ people[i].safekeepingDeposit +" "+ "lei");
         document.getElementsByTagName('input')[i].value = "";
@@ -384,26 +399,26 @@ function addToHistory(i) {
     })
 }
 
-// function handleHistory(i) {
-//     historyDiv.innerHTML = '';
-//     const historyTitle = document.createElement('h3')
-//     historyDiv.append(historyTitle)
-//     historyTitle.innerHTML = `${people[i].name}'s history`
-//     allPeopleHistory = JSON.parse(localStorage.getItem('allPeopleHistory'));
-//     const filtredPeople = allPeopleHistory.filter(item => item.name == people[i].name)
-    // filtredPeople.forEach(el => {
-    //     const elArray = Object.entries(el)
-    //     const eventDiv = document.createElement('div');
-    //     eventDiv.classList.add('eventDiv');
-    //     eventDiv.innerHTML = `
-    //     <span>${elArray[0][0]}: ${elArray[0][1]}</span>
-    //     <span>${elArray[1][0]}: ${elArray[1][1]}</span>
-    //     <span>${elArray[2][0]}: ${elArray[2][1]} lei</span>
-    //     `
-    //     historyDiv.append(eventDiv)
-    // })
+function handleHistory(i) {
+    historyDiv.innerHTML = '';
+    const historyTitle = document.createElement('h3')
+    historyDiv.append(historyTitle)
+    historyTitle.innerHTML = `${people[i].name}'s history`
+    allPeopleHistory = JSON.parse(localStorage.getItem('allPeopleHistory'));
+    const filtredPeople = allPeopleHistory.filter(item => item.name == people[i].name)
+    filtredPeople.forEach(el => {
+        const elArray = Object.entries(el)
+        const eventDiv = document.createElement('div');
+        eventDiv.classList.add('eventDiv');
+        eventDiv.innerHTML = `
+        <span>${elArray[0][0]}: ${elArray[0][1]}</span>
+        <span>${elArray[1][0]}: ${elArray[1][1]}</span>
+        <span>${elArray[2][0]}: ${elArray[2][1]} lei</span>
+        `
+        historyDiv.append(eventDiv)
+    })
 
-// }
+}
 setInterval(() => {
     totalDeposit = JSON.parse(localStorage.getItem('myList')).totalDeposit;
     // console.log(totalDeposit.toFixed(2))
@@ -491,33 +506,33 @@ document.getElementById('selectType').addEventListener('change', function() {
     })
 })
 const counters = document.getElementsByClassName('personCounter');
-// for(let i = 0; i < people.length; i++) {
-//     setInterval(() => {       
-//         people[i].counter++;
-//         const personHistoryObj = {
-//             name: people[i].name,
-//             date: new Date().toString().substring(0, 25),
-//             money_lose: (people[i].totalAmount * 5/100)
-//         };
-//         if(people[i].counter == 10)  {
-//             people[i].totalAmount -= (people[i].totalAmount * 5/100);
-//             people[i].totalAmount.toFixed(2)
-//             people[i].counter = 0;
-//             totalDeposit += (people[i].totalAmount * 5/100);
-//             localStorage.setItem("myList", JSON.stringify({ "totalDeposit": totalDeposit }))
-//             currentSharedAmount.innerHTML = `${totalDeposit.toFixed(2)} lei`;
-//             document.getElementsByClassName('personSold')[i].innerHTML = `${people[i].totalAmount.toFixed(2)} Lei`;
+for(let i = 0; i < people.length; i++) {
+    setInterval(() => {       
+        people[i].counter++;
+        const personHistoryObj = {
+            name: people[i].name,
+            date: new Date().toString().substring(0, 25),
+            money_lose: (people[i].totalAmount * 5/100)
+        };
+        if(people[i].counter == 10)  {
+            people[i].totalAmount -= (people[i].totalAmount * 5/100);
+            people[i].totalAmount.toFixed(2)
+            people[i].counter = 0;
+            totalDeposit += (people[i].totalAmount * 5/100);
+            localStorage.setItem("myList", JSON.stringify({ "totalDeposit": totalDeposit }))
+            currentSharedAmount.innerHTML = `${totalDeposit.toFixed(2)} lei`;
+            document.getElementsByClassName('personSold')[i].innerHTML = `${people[i].totalAmount.toFixed(2)} Lei`;
            
-//             console.log(people[i].totalAmount)
-//             historyObj.unshift(personHistoryObj);
-//             localStorage.setItem("allPeopleHistory", JSON.stringify(historyObj));
-//             allPeopleHistory = JSON.parse(localStorage.getItem('allPeopleHistory'));
-//             addToHistory()
-//         }
+            console.log(people[i].totalAmount)
+            historyObj.unshift(personHistoryObj);
+            localStorage.setItem("allPeopleHistory", JSON.stringify(historyObj));
+            allPeopleHistory = JSON.parse(localStorage.getItem('allPeopleHistory'));
+            addToHistory()
+        }
             
-//         counters[i].innerHTML = people[i].counter;       
-//     }, 10000) 
-// }
+        counters[i].innerHTML = people[i].counter;       
+    }, 10000) 
+}
 function updataTotalAmount(i) {
     people[i].counter = 0;
     document.getElementsByClassName('personCounter')[i].innerHTML = "0"
